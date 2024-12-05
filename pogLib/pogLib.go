@@ -159,6 +159,11 @@ func (pogdb *pogDB) NextItem()(key, val []byte, end bool, err error) {
 	return key,val,false, nil
 }
 
+func (pogdb *pogDB) NextItemStop() {
+	pogdb.it = nil
+	return
+}
+
 func (pogdb *pogDB) Sync()(error) {
 	db := pogdb.db
 	err := db.Sync()
