@@ -8,8 +8,8 @@ Will test performance against rosedb.
 
 ## Features
 
- - create add, update over the db put
- - made the iterator an internal variable
+ - created add, update functions over the db put function to test whether key exists.  
+ - made the iterator an internal variable.  
 
 ## Documentation
 
