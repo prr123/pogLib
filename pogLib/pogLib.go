@@ -5,7 +5,7 @@ import (
     "github.com/akrylysov/pogreb"
 )
 
-type pogDB struct {
+type PogDB struct {
 	db *pogreb.DB
 	Dbg bool
 	options *pogreb.Options
@@ -14,9 +14,9 @@ type pogDB struct {
 }
 
 
-func InitPogDb(dbFil string)(pogdb *pogDB, err error) {
+func InitPogDb(dbFil string)(pogdb *PogDB, err error) {
 
-	var pogDb pogDB
+	var pogDb PogDB
 	db, err := pogreb.Open(dbFil, nil)
 	if err != nil {return nil, fmt.Errorf("cannot open db: %v", err)}
 //    defer db.Close()
@@ -29,7 +29,7 @@ func InitPogDb(dbFil string)(pogdb *pogDB, err error) {
 
 
 // write
-func (pogdb *pogDB) WriteStr(key, val string)(error) {
+func (pogdb *PogDB) WriteStr(key, val string)(error) {
 
 	db := pogdb.db
     err := db.Put([]byte(key), []byte(val))
@@ -37,7 +37,7 @@ func (pogdb *pogDB) WriteStr(key, val string)(error) {
 	return nil
 }
 
-func (pogdb *pogDB) Write(key string, val []byte)(error) {
+func (pogdb *PogDB) Write(key string, val []byte)(error) {
 
 	db := pogdb.db
     err := db.Put([]byte(key), val)
@@ -46,7 +46,7 @@ func (pogdb *pogDB) Write(key string, val []byte)(error) {
 }
 
 // add
-func (pogdb *pogDB) AddStr(key, val string)(error) {
+func (pogdb *PogDB) AddStr(key, val string)(error) {
 
     db := pogdb.db
 	ok, err := db.Has([]byte(key))
@@ -58,7 +58,7 @@ func (pogdb *pogDB) AddStr(key, val string)(error) {
     return nil
 }
 
-func (pogdb *pogDB) Add(key string, val []byte)(error) {
+func (pogdb *PogDB) Add(key string, val []byte)(error) {
 
     db := pogdb.db
 	ok, err := db.Has([]byte(key))
@@ -72,7 +72,7 @@ func (pogdb *pogDB) Add(key string, val []byte)(error) {
 
 // update
 
-func (pogdb *pogDB) UpdStr(key, val string)(error) {
+func (pogdb *PogDB) UpdStr(key, val string)(error) {
 
     db := pogdb.db
 	ok, err := db.Has([]byte(key))
@@ -84,7 +84,7 @@ func (pogdb *pogDB) UpdStr(key, val string)(error) {
     return nil
 }
 
-func (pogdb *pogDB) Upd(key string, val []byte)(error) {
+func (pogdb *PogDB) Upd(key string, val []byte)(error) {
 
     db := pogdb.db
 	ok, err := db.Has([]byte(key))
@@ -97,7 +97,7 @@ func (pogdb *pogDB) Upd(key string, val []byte)(error) {
 }
 
 // check key
-func (pogdb *pogDB) HasKey(key string)(bool, error) {
+func (pogdb *PogDB) HasKey(key string)(bool, error) {
     db := pogdb.db
 	ok, err := db.Has([]byte(key))
     if err != nil {return false, fmt.Errorf("db HasKey: %v", err)}
@@ -105,7 +105,7 @@ func (pogdb *pogDB) HasKey(key string)(bool, error) {
 }
 
 // delete
-func (pogdb *pogDB) Del(key string)(error) {
+func (pogdb *PogDB) Del(key string)(error) {
 
 	db := pogdb.db
     err := db.Delete([]byte(key))
@@ -114,7 +114,7 @@ func (pogdb *pogDB) Del(key string)(error) {
 }
 
 //read
-func (pogdb *pogDB) ReadStr(key string)(string, error) {
+func (pogdb *PogDB) ReadStr(key string)(string, error) {
 
 	db := pogdb.db
     val, err := db.Get([]byte(key))
@@ -123,7 +123,7 @@ func (pogdb *pogDB) ReadStr(key string)(string, error) {
 }
 
 //read
-func (pogdb *pogDB) Read(key string)([]byte, error) {
+func (pogdb *PogDB) Read(key string)([]byte, error) {
 
 	db := pogdb.db
     val, err := db.Get([]byte(key))
@@ -132,7 +132,7 @@ func (pogdb *pogDB) Read(key string)([]byte, error) {
 }
 
 // Count
-func (pogdb *pogDB) DbCount()(int, error) {
+func (pogdb *PogDB) DbCount()(int, error) {
 	db := pogdb.db
 	size := db.Count()
 //    if err != nil {return -1, fmt.Errorf("db count: %v", err)}
@@ -141,14 +141,14 @@ func (pogdb *pogDB) DbCount()(int, error) {
 
 
 // size
-func (pogdb *pogDB) DbSize()(int64, error) {
+func (pogdb *PogDB) DbSize()(int64, error) {
 	db := pogdb.db
 	size, err := db.FileSize()
     if err != nil {return -1, fmt.Errorf("db size: %v", err)}
 	return size, nil
 }
 
-func (pogdb *pogDB) NextItem()(key, val []byte, end bool, err error) {
+func (pogdb *PogDB) NextItem()(key, val []byte, end bool, err error) {
 	if pogdb.it == nil {
 		db := pogdb.db
 		pogdb.it = db.Items()
@@ -159,24 +159,24 @@ func (pogdb *pogDB) NextItem()(key, val []byte, end bool, err error) {
 	return key,val,false, nil
 }
 
-func (pogdb *pogDB) NextItemStop() {
+func (pogdb *PogDB) NextItemStop() {
 	pogdb.it = nil
 	return
 }
 
-func (pogdb *pogDB) Sync()(error) {
+func (pogdb *PogDB) Sync()(error) {
 	db := pogdb.db
 	err := db.Sync()
 	return err
 }
 
-func (pogdb *pogDB) Close()(error) {
+func (pogdb *PogDB) Close()(error) {
 	db := pogdb.db
 	err := db.Close()
 	return err
 }
 
-func (db *pogDB) PrintDb() {
+func (db *PogDB) PrintDb() {
 	fmt.Println("***** PogDb ******")
 	fmt.Printf("dbg: %t\n", db.Dbg)
 	fmt.Printf("db dir: %s\n", db.DbFil)
