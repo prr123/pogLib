@@ -10,6 +10,7 @@ Will test performance against rosedb.
 
  - created add, update functions over the db put function to test whether key exists.  
  - made the iterator an internal variable.  
+ - limited keys to strings for convenience -- may have to revisit in the future  
 
 ## Documentation
 
@@ -66,6 +67,11 @@ Function that returns the size (in bytes) of the db
 func (pogdb *pogDB) DbSize()(int64, error)  
 
 ### NextItem 
+Function that creates an iterator and provides the next kv pair in the db.  
+
+func (pogdb *pogDB) NextItem()(key, val []byte, end bool, err error)  
+
+### NextItemStop
 Function that creates an iterator and provides the next kv pair in the db.  
 
 func (pogdb *pogDB) NextItem()(key, val []byte, end bool, err error)  
